@@ -7,7 +7,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Make sure we have a sensible hostname
-echo "Enter a hostname: "
+echo "Enter a hostname for this machine: "
 read NEWHOSTNAME
 hostname $NEWHOSTNAME
 echo $NEWHOSTNAME > /etc/hostname
