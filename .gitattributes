@@ -1,0 +1,5 @@
+# don't touch line endings by default
+* -text
+
+*.ps1 text eol=crlf
+*.sh text eol=lf
