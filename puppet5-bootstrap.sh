@@ -12,6 +12,14 @@ read NEWHOSTNAME
 hostname $NEWHOSTNAME
 echo $NEWHOSTNAME > /etc/hostname
 
+echo "Enter puppet master hostname: "
+read PUPPETMASTER
+
+echo "Enter puppet master port (8140 is the normal one): "
+read MASTERPORT
+
+echo "Enter environment name: "
+read PUPPETENV
 
 # Download and install puppet
 mkdir setup-temp
@@ -25,17 +33,14 @@ apt-get install puppet-agent || exit 1
 export PATH=$PATH:/opt/puppetlabs/bin
 
 # Find the server we're using
-echo "Enter puppet master hostname: "
-read PUPPETMASTER
+
 /opt/puppetlabs/bin/puppet config set server $PUPPETMASTER --section main
 
-echo "Enter puppet master port (8140 is the normal one): "
-read MASTERPORT
+
 /opt/puppetlabs/bin/puppet config set masterport $MASTERPORT --section main
 
 # Set the environment
-echo "Enter environment name: "
-read PUPPETENV
+
 /opt/puppetlabs/bin/puppet config set environment $PUPPETENV
 
 # Initial puppet run!
