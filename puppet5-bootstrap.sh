@@ -41,7 +41,7 @@ export PATH=$PATH:/opt/puppetlabs/bin
 
 # Set the environment
 
-/opt/puppetlabs/bin/puppet config set environment $PUPPETENV
+/opt/puppetlabs/bin/puppet config --section agent set environment $PUPPETENV
 
 # Initial puppet run!
 /opt/puppetlabs/bin/puppet agent -t
