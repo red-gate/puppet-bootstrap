@@ -27,30 +27,24 @@ mkdir setup-temp
 cd setup-temp
 
 apt-get update || exit 1
-apt-get install ruby-full facter hiera bundler unzip -y || exit 1
+apt-get install ruby-full facter hiera unzip -y || exit 1
+gem install bundler
 
-wget https://github.com/puppetlabs/puppet/archive/5.4.0.zip || exit 1
-unzip 5.4.0.zip || exit 1
-cd puppet-5.4.0
+wget https://github.com/puppetlabs/puppet/archive/5.5.0.tar.gz || exit 1
+tar xzf 5.5.0.tar.gz || exit 1
+cd puppet-5.5.0
 
 bundle install --path .bundle/gems || exit 1
 bundle update || exit 1
 ruby install.rb || exit 1
 
-# Add puppet path for future sessions
-
-cat >> /etc/profile.d/puppetpath.sh << \EOF
-    PATH=$PATH:/opt/puppetlabs/bin
-EOF
-
-# Add puppet path for this session
-export PATH=$PATH:/opt/puppetlabs/bin || exit 1
+# Note: we used to add /opt/puppetlabs/bin to the path here, but it would seem Puppet 5.5 at least puts it in /usr/bin/puppet anyway, so no need...
 
 puppet config set server $MASTER --section main || exit 1
 
 puppet config set masterport $MASTERPORT --section main
 
-puppet config set environment $PUPPETENV --section main || exit 1
+puppet config set environment $PUPPETENV --section agent || exit 1
 
 puppet agent -t
 
