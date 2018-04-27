@@ -50,8 +50,8 @@ export PATH=$PATH:/opt/puppetlabs/bin
 if [ $SET_EXTRA_ATTRIBUTES ] && [ ${SET_EXTRA_ATTRIBUTES,,} == "y" ]; then
 	echo "extension_requests:" >> /etc/puppetlabs/puppet/csr_attributes.yaml
 	[ $PP_ENVIRONMENT ] && echo "    pp_environment: $PP_ENVIRONMENT" >> /etc/puppetlabs/puppet/csr_attributes.yaml
-	[ $PP_SERVICE ] && echo "    pp_environment: $PP_SERVICE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
-	[ $PP_ROLE ] && echo "    pp_environment: $PP_ROLE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+	[ $PP_SERVICE ] && echo "    pp_service: $PP_SERVICE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+	[ $PP_ROLE ] && echo "    pp_role: $PP_ROLE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
 fi
 
 # Initial puppet run!
