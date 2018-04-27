@@ -3,23 +3,26 @@
 # Make sure only root can run our script
 if [ "$(id -u)" != "0" ]; then
    echo "Usage: sudo puppet5-bootstrap.sh" 1>&2
-   exit 1
+   # exit 1
 fi
 
 # Make sure we have a sensible hostname
-echo "Enter a hostname for this machine: "
-read NEWHOSTNAME
+read -p "Enter a hostname for this machine: " NEWHOSTNAME
 hostname $NEWHOSTNAME
 echo $NEWHOSTNAME > /etc/hostname
 
-echo "Enter puppet master hostname: "
-read PUPPETMASTER
+read -p "Enter puppet master hostname: " PUPPETMASTER
 
-echo "Enter puppet master port (8140 is the normal one): "
-read MASTERPORT
+read -p "Enter puppet master port (8140 is the normal one): " MASTERPORT
 
-echo "Enter environment name: "
-read PUPPETENV
+read -p "Enter Puppet environment name: " PUPPETENV
+
+read -p "Set extra certificate attributes? [y/N]:" SET_EXTRA_ATTRIBUTES
+if [ $SET_EXTRA_ATTRIBUTES ] && [ ${SET_EXTRA_ATTRIBUTES,,} == "y" ]; then
+	read -p "pp_environment: " PP_ENVIRONMENT
+	read -p "pp_service: " PP_SERVICE
+	read -p "pp_role: " PP_ROLE
+fi
 
 # Download and install puppet
 mkdir setup-temp
@@ -42,6 +45,14 @@ export PATH=$PATH:/opt/puppetlabs/bin
 # Set the environment
 
 /opt/puppetlabs/bin/puppet config --section agent set environment $PUPPETENV
+
+# If we're setting extra cert attributes, do that now
+if [ $SET_EXTRA_ATTRIBUTES ] && [ ${SET_EXTRA_ATTRIBUTES,,} == "y" ]; then
+	echo "extension_requests:" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+	[ $PP_ENVIRONMENT] && echo "    pp_environment: $PP_ENVIRONMENT" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+	[ $PP_SERVICE] && echo "    pp_environment: $PP_SERVICE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+	[ $PP_ROLE] && echo "    pp_environment: $PP_ROLE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+fi
 
 # Initial puppet run!
 /opt/puppetlabs/bin/puppet agent -t
