@@ -32,7 +32,6 @@ dist=`awk -F= '/^NAME/{print $2}' /etc/os-release`
 
 if [ "$dist" == "\"CentOS Linux\"" ]; then
     version=`awk -F= '/^VERSION_ID/{print $2}' /etc/os-release`
-    yum install wget -y || exit 1
     wget https://yum.puppetlabs.com/puppet5/puppet5-release-el-${version//\"}.noarch.rpm || exit 1
     rpm -Uvh puppet5-release-el-${version//\"}.noarch.rpm || exit 1
     yum update || exit 1
