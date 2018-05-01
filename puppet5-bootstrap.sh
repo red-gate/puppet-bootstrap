@@ -27,10 +27,25 @@ fi
 # Download and install puppet
 mkdir setup-temp
 cd setup-temp
-wget https://apt.puppetlabs.com/puppet5-release-`lsb_release -c -s`.deb || exit 1
-dpkg -i puppet5-release-`lsb_release -c -s`.deb || exit 1
-apt-get update || exit 1
-apt-get install puppet-agent || exit 1
+
+dist=`awk -F= '/^NAME/{print $2}' /etc/os-release`
+
+if [ "$dist" == "\"CentOS Linux\"" ]; then
+    version=`awk -F= '/^VERSION_ID/{print $2}' /etc/os-release`
+    yum install wget -y || exit 1
+    wget https://yum.puppetlabs.com/puppet5/puppet5-release-el-${version//\"}.noarch.rpm || exit 1
+    rpm -Uvh puppet5-release-el-${version//\"}.noarch.rpm || exit 1
+    yum update || exit 1
+    yum install puppet-agent -y || exit 1
+elif [ "$dist" == "\"Ubuntu\"" ]; then
+    wget https://apt.puppetlabs.com/puppet5-release-`lsb_release -c -s`.deb || exit 1
+    dpkg -i puppet5-release-`lsb_release -c -s`.deb || exit 1
+    apt-get update || exit 1
+    apt-get install puppet-agent || exit 1
+else
+    echo "Not Ubuntu or CentOS. Aborting."
+    exit 1
+fi
 
 # Add puppet to this session's PATH (the installer will sort it for future sessions)
 export PATH=$PATH:/opt/puppetlabs/bin
