@@ -37,8 +37,12 @@ if [ "$dist" == "\"CentOS Linux\"" ]; then
     yum update || exit 1
     yum install puppet-agent -y || exit 1
 elif [ "$dist" == "\"Ubuntu\"" ]; then
-    wget https://apt.puppetlabs.com/puppet5-release-`lsb_release -c -s`.deb || exit 1
-    dpkg -i puppet5-release-`lsb_release -c -s`.deb || exit 1
+	RELEASE_NAME=`lsb_release -c -s`
+	if [ "$RELEASE_NAME" == "bionic" ]; then
+		RELEASE_NAME=stretch
+	fi
+    wget https://apt.puppetlabs.com/puppet5-release-${RELEASE_NAME}.deb || exit 1
+    dpkg -i puppet5-release-${RELEASE_NAME}.deb || exit 1
     apt-get update || exit 1
     apt-get install puppet-agent || exit 1
 else
