@@ -14,7 +14,8 @@ param(
     [string] $PuppetAgentAccountUser,
     [string] $PuppetAgentAccountPassword,
     [string] $PuppetAgentAccountDomain,
-    [string] $PuppetServer
+    [string] $PuppetServer,
+    [string] $PuppetEnvironment
 )
 
 if(Get-Command puppet -ErrorAction 0) {
@@ -45,6 +46,7 @@ if($PuppetAgentAccountDomain) { $install_args += "PUPPET_AGENT_ACCOUNT_DOMAIN=$P
 if($PuppetAgentAccountUser) { $install_args += "PUPPET_AGENT_ACCOUNT_USER=$PuppetAgentAccountUser" }
 if($PuppetAgentAccountPassword) { $install_args += "PUPPET_AGENT_ACCOUNT_PASSWORD=$PuppetAgentAccountPassword" }
 if($PuppetServer) { $install_args += "PUPPET_MASTER_SERVER=$PuppetServer" }
+if($PuppetEnvironment) { $install_args += "PUPPET_AGENT_ENVIRONMENT=$PuppetEnvironment" }
 
 Write-Host "Installing Puppet. Running msiexec.exe $install_args"
 $process = Start-Process -FilePath msiexec.exe -ArgumentList $install_args -Wait -PassThru
