@@ -53,11 +53,10 @@ if($CertificateExtensions) {
 
     New-Item $env:ProgramData\PuppetLabs\puppet\etc -ItemType Directory -Force | Out-Null
 
-    @"
-extension_requests:
-$CertificateExtensions.GetEnumerator() | % { "  $($_.Name): $($_.Value)" }
-"@ | Set-Content -Path $env:ProgramData\PuppetLabs\puppet\etc\csr_attributes.yaml
-
+    @(
+        'extension_requests:',
+        ($CertificateExtensions.GetEnumerator() | % { "  $($_.Name): $($_.Value)" })
+    ) | Set-Content -Path $env:ProgramData\PuppetLabs\puppet\etc\csr_attributes.yaml
 }
 
 $install_args = @(
