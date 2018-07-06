@@ -9,8 +9,9 @@
 #>
 param(
     # Whether to stop and disable the puppet service that will be started by the installer
-    [switch] $DisablePuppetService,
-
+    [ValidateSet('Automatic', 'Manual', 'Disabled')]
+    [ValidateNotNullOrEmpty()]
+    [string] $PuppetAgentStartupMode = 'Automatic',
     [string] $PuppetAgentAccountUser,
     [string] $PuppetAgentAccountPassword,
     [string] $PuppetAgentAccountDomain,
@@ -41,7 +42,13 @@ while(!(Test-Path $installFile)) {
     (new-object net.webclient).DownloadFile($MsiUrl, $installFile)
 }
 
-$install_args = @("/qn", "/norestart","/i", 'C:\Windows\Temp\puppet-agent.msi')
+$install_args = @(
+    '/qn',
+    '/norestart',
+    '/i',
+    'C:\Windows\Temp\puppet-agent.msi',
+    "PUPPET_AGENT_STARTUP_MODE=$PuppetAgentStartupMode"
+    )
 if($PuppetAgentAccountDomain) { $install_args += "PUPPET_AGENT_ACCOUNT_DOMAIN=$PuppetAgentAccountDomain" }
 if($PuppetAgentAccountUser) { $install_args += "PUPPET_AGENT_ACCOUNT_USER=$PuppetAgentAccountUser" }
 if($PuppetAgentAccountPassword) { $install_args += "PUPPET_AGENT_ACCOUNT_PASSWORD=$PuppetAgentAccountPassword" }
@@ -53,14 +60,6 @@ $process = Start-Process -FilePath msiexec.exe -ArgumentList $install_args -Wait
 if ($process.ExitCode -ne 0) {
     Write-Host "Installer failed with code $($process.ExitCode)"
     Exit 1
-}
-
-# Stop the service that it autostarts
-if($DisablePuppetService.IsPresent) {
-    Write-Host "Stopping Puppet service that is running by default..."
-    Start-Sleep -s 5
-    Stop-Service -Name puppet
-    Set-Service -Name puppet -StartupType Disabled
 }
 
 Write-Host "Puppet successfully installed."
