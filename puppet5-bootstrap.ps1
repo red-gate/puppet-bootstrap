@@ -16,7 +16,11 @@ param(
     [string] $PuppetAgentAccountPassword,
     [string] $PuppetAgentAccountDomain,
     [string] $PuppetServer,
-    [string] $PuppetEnvironment
+    [string] $PuppetEnvironment,
+    # A list of certificate extensions as defined in https://puppet.com/docs/puppet/5.5/ssl_attributes_extensions.html
+    # example: @{ pp_environment='staging'; pp_role='kubernetes-master' }
+    [ValidateNotNull()]
+    [HashTable] $CertificateExtensions = @{}
 )
 
 if(Get-Command puppet -ErrorAction 0) {
@@ -40,6 +44,20 @@ $installFile = 'C:\Windows\Temp\puppet-agent.msi'
 while(!(Test-Path $installFile)) {
     Write-Host "Downloading puppet-agent from $MsiUrl to $installFile"
     (new-object net.webclient).DownloadFile($MsiUrl, $installFile)
+}
+
+if($CertificateExtensions) {
+    # Create the csr_attributes.yaml with values from $CertificateExtensions
+    # Do it before installing puppet, in case the installer start the puppet service
+    # ($PuppetAgentStartupMode = Automatic)
+
+    New-Item $env:ProgramData\PuppetLabs\puppet\etc -ItemType Directory -Force | Out-Null
+
+    @"
+extension_requests:
+$CertificateExtensions.GetEnumerator() | % { "  $($_.Name): $($_.Value)" }
+"@ | Set-Content -Path $env:ProgramData\PuppetLabs\puppet\etc\csr_attributes.yaml
+
 }
 
 $install_args = @(
