@@ -38,9 +38,6 @@ if [ "$dist" == "\"CentOS Linux\"" ]; then
     yum install puppet-agent -y || exit 1
 elif [ "$dist" == "\"Ubuntu\"" ]; then
 	RELEASE_NAME=`lsb_release -c -s`
-	if [ "$RELEASE_NAME" == "bionic" ]; then
-		RELEASE_NAME=stretch
-	fi
     wget https://apt.puppetlabs.com/puppet6-release-${RELEASE_NAME}.deb || exit 1
     dpkg -i puppet6-release-${RELEASE_NAME}.deb || exit 1
     apt-get update || exit 1
