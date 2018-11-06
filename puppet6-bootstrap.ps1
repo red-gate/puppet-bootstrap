@@ -16,6 +16,7 @@ param(
     [string] $PuppetAgentAccountPassword,
     [string] $PuppetAgentAccountDomain,
     [string] $PuppetServer,
+    [Integer] $PuppetServerPort,
     [string] $PuppetEnvironment,
     # A list of certificate extensions as defined in https://puppet.com/docs/puppet/5.5/ssl_attributes_extensions.html
     # example: @{ pp_environment='staging'; pp_role='kubernetes-master' }
@@ -86,4 +87,9 @@ Write-Host "Puppet successfully installed."
 if($env:Path -notcontains 'C:\Program Files\Puppet Labs\Puppet\bin' ) {
   $env:Path += ';C:\Program Files\Puppet Labs\Puppet\bin'
   [Environment]::SetEnvironmentVariable('Path', $env:Path, 'Machine')
+}
+
+if ($PuppetServerPort) {
+    $set_port_args = @('config', 'set', 'masterport', $PuppetServerPort, '--section', 'main')
+    Start-Process -FilePath puppet.exe -ArgumentList $set_port_args -Wait -PassThru
 }
