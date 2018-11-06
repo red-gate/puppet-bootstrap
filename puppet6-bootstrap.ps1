@@ -16,7 +16,7 @@ param(
     [string] $PuppetAgentAccountPassword,
     [string] $PuppetAgentAccountDomain,
     [string] $PuppetServer,
-    [Integer] $PuppetServerPort,
+    [Int] $PuppetServerPort,
     [string] $PuppetEnvironment,
     # A list of certificate extensions as defined in https://puppet.com/docs/puppet/5.5/ssl_attributes_extensions.html
     # example: @{ pp_environment='staging'; pp_role='kubernetes-master' }
