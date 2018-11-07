@@ -78,5 +78,8 @@ KillMode=process
 WantedBy=multi-user.target
 EOM
 
+systemctl daemon-reload
+
+
 # Enable the service
 puppet resource service puppet ensure=running enable=true
