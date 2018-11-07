@@ -31,9 +31,9 @@ apt-get install ruby-full facter hiera unzip -y || exit 1
 gem install bundler
 gem install semantic_puppet
 
-wget https://github.com/puppetlabs/puppet/archive/6.0.3.tar.gz || exit 1
-tar xzf 6.0.3.tar.gz || exit 1
-cd puppet-6.0.3
+wget https://github.com/puppetlabs/puppet/archive/6.0.4.tar.gz || exit 1
+tar xzf 6.0.4.tar.gz || exit 1
+cd puppet-6.0.4
 
 bundle install --path .bundle/gems || exit 1
 bundle update || exit 1
