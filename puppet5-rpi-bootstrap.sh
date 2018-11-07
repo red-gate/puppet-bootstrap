@@ -57,5 +57,26 @@ puppet agent --enable
 # Run it for reals
 puppet agent -t
 
+
+# Create systemd service
+FILE='/lib/systemd/system/puppet.service'
+cat > $FILE <<- EOM
+[Unit]
+Description=Puppet agent
+Wants=basic.target
+After=basic.target network.target
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/puppetagent
+EnvironmentFile=-/etc/sysconfig/puppet
+EnvironmentFile=-/etc/default/puppet
+ExecStart=/usr/bin/puppet agent $PUPPET_EXTRA_OPTS --no-daemonize
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+EOM
+
 # Enable the service
 puppet resource service puppet ensure=running enable=true
