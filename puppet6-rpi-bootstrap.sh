@@ -29,6 +29,7 @@ cd setup-temp
 apt-get update || exit 1
 apt-get install ruby-full facter hiera unzip -y || exit 1
 gem install bundler
+gem install semantic_puppet
 
 wget https://github.com/puppetlabs/puppet/archive/6.0.3.tar.gz || exit 1
 tar xzf 6.0.3.tar.gz || exit 1
