@@ -29,7 +29,7 @@ if [ -z "$PUPPETENV" ]; then
 fi
 echo "Using puppet environment: $PUPPETENV"
 
-if [ -z "$PP_ENVIRONMENT$PP_SERVICE$PP_ROLE"]; then
+if [ -z "$PP_ENVIRONMENT$PP_SERVICE$PP_ROLE" ]; then
     read -p "Set extra certificate attributes? [y/N]:" SET_EXTRA_ATTRIBUTES
     if [ $SET_EXTRA_ATTRIBUTES ] && [ ${SET_EXTRA_ATTRIBUTES,,} == "y" ]; then
     	read -p "pp_environment: " PP_ENVIRONMENT
