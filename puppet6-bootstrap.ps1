@@ -90,6 +90,5 @@ if($env:Path -notcontains 'C:\Program Files\Puppet Labs\Puppet\bin' ) {
 }
 
 if ($PuppetServerPort) {
-    $set_port_args = @('config', 'set', 'masterport', $PuppetServerPort, '--section', 'main')
-    Start-Process -FilePath puppet.bat -ArgumentList $set_port_args -Wait -PassThru
+    puppet.bat config set masterport $PuppetServerPort --section main
 }
