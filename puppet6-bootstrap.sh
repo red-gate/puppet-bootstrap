@@ -80,7 +80,7 @@ export PATH=$PATH:/opt/puppetlabs/bin
 /opt/puppetlabs/bin/puppet config --section agent set environment $PUPPETENV
 
 # If we're setting extra cert attributes, do that now
-if [ $SET_EXTRA_ATTRIBUTES ] && [ ${SET_EXTRA_ATTRIBUTES,,} == "y" ]; then
+if [ ! -z "$PP_ENVIRONMENT$PP_SERVICE$PP_ROLE" ]; then
 	echo "extension_requests:" >> /etc/puppetlabs/puppet/csr_attributes.yaml
 	[ $PP_ENVIRONMENT ] && echo "    pp_environment: $PP_ENVIRONMENT" >> /etc/puppetlabs/puppet/csr_attributes.yaml
 	[ $PP_SERVICE ] && echo "    pp_service: $PP_SERVICE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
