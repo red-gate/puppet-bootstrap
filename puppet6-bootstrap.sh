@@ -38,9 +38,9 @@ if [ -z "$PP_ENVIRONMENT$PP_SERVICE$PP_ROLE" ]; then
     fi
 fi
 echo "Extended certificate attributes:"
-echo "\tpp_environment: $PP_ENVIRONMENT"
-echo "\tpp_service: $PP_SERVICE"
-echo "\tpp_role: $PP_ROLE"
+echo "  pp_environment: $PP_ENVIRONMENT"
+echo "  pp_service: $PP_SERVICE"
+echo "  pp_role: $PP_ROLE"
 
 # Download and install puppet
 mkdir setup-temp
