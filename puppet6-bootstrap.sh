@@ -7,22 +7,40 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Make sure we have a sensible hostname
-read -p "Enter a hostname for this machine: " NEWHOSTNAME
+if [ -z "$NEWHOSTNAME" ]; then
+    read -p "Enter a hostname for this machine: " NEWHOSTNAME
+fi
+echo "Using new hostname from NEWHOSTNAME: $NEWHOSTNAME"
 hostname $NEWHOSTNAME
 echo $NEWHOSTNAME > /etc/hostname
 
-read -p "Enter puppet master hostname: " PUPPETMASTER
-
-read -p "Enter puppet master port (8140 is the normal one): " MASTERPORT
-
-read -p "Enter Puppet environment name: " PUPPETENV
-
-read -p "Set extra certificate attributes? [y/N]:" SET_EXTRA_ATTRIBUTES
-if [ $SET_EXTRA_ATTRIBUTES ] && [ ${SET_EXTRA_ATTRIBUTES,,} == "y" ]; then
-	read -p "pp_environment: " PP_ENVIRONMENT
-	read -p "pp_service: " PP_SERVICE
-	read -p "pp_role: " PP_ROLE
+if [ -z "$PUPPETMASTER" ]; then
+    read -p "Enter puppet master hostname: " PUPPETMASTER
 fi
+echo "Using puppet master: $PUPPETMASTER"
+
+if [ -z "$MASTERPORT" ]; then
+    read -p "Enter puppet master port (8140 is the normal one): " MASTERPORT
+fi
+echo "Using master port: $MASTERPORT"
+
+if [ -z "$PUPPETENV" ]; then
+    read -p "Enter Puppet environment name: " PUPPETENV
+fi
+echo "Using puppet environment: $PUPPETENV"
+
+if [ -z "$PP_ENVIRONMENT$PP_SERVICE$PP_ROLE"]; then
+    read -p "Set extra certificate attributes? [y/N]:" SET_EXTRA_ATTRIBUTES
+    if [ $SET_EXTRA_ATTRIBUTES ] && [ ${SET_EXTRA_ATTRIBUTES,,} == "y" ]; then
+    	read -p "pp_environment: " PP_ENVIRONMENT
+    	read -p "pp_service: " PP_SERVICE
+    	read -p "pp_role: " PP_ROLE
+    fi
+fi
+echo "Extended certificate attributes:"
+echo "\tpp_environment: $PP_ENVIRONMENT"
+echo "\tpp_service: $PP_SERVICE"
+echo "\tpp_role: $PP_ROLE"
 
 # Download and install puppet
 mkdir setup-temp
@@ -72,11 +90,13 @@ fi
 # Initial puppet run!
 /opt/puppetlabs/bin/puppet agent -t
 
-echo "Sign and classify the node on the puppet master, then press enter"
-read dummy
+if [ ! -z "$WAIT_FOR_SIGN" ]; then
+    echo "Sign and classify the node on the puppet master, then press enter"
+    read dummy
+
+    # First real puppet run
+    /opt/puppetlabs/bin/puppet agent -t || exit 1
+fi
 
 # Enable puppet
 /opt/puppetlabs/bin/puppet agent --enable
-
-# First real puppet run
-/opt/puppetlabs/bin/puppet agent -t || exit 1
