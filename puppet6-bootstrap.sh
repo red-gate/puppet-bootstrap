@@ -90,7 +90,7 @@ fi
 # Initial puppet run!
 /opt/puppetlabs/bin/puppet agent -t
 
-if [ ! -z "$WAIT_FOR_SIGN" ]; then
+if [ -z "$NO_WAIT_FOR_SIGN" ]; then
     echo "Sign and classify the node on the puppet master, then press enter"
     read dummy
 
