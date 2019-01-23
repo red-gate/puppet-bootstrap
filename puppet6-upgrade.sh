@@ -23,6 +23,10 @@ fi
 sudo service puppet stop
 sudo rm -rf /etc/puppetlabs/puppet/ssl
 
+# Remove any old release packages
+sudo dpkg -r puppet5-release
+sudo dpkg -r puppet4-release
+
 # If we were previously pointing at our Puppet 4 master, move over to Puppet 6
 OLDPORT=`sudo /opt/puppetlabs/puppet/bin/puppet config print --section main masterport`
 if [ "$OLDPORT" == "8141" ]; then
