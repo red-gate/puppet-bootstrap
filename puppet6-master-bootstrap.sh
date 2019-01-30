@@ -108,7 +108,7 @@ echo "Installing r10k"
 gem install r10k || exit 1
 
 echo "Running r10k. This WILL take a while..."
-/usr/local/bin/r10k deploy environment --puppetfile || exit 1
+/usr/local/bin/r10k deploy environment --puppetfile
 
 echo "Install vault and debouncer for puppet"
 /opt/puppetlabs/puppet/bin/gem install vault debouncer || exit 1
