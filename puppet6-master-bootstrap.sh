@@ -2,24 +2,29 @@
 
 # Make sure only root can run our script
 if [ "$(id -u)" != "0" ]; then
-   echo "Usage: sudo puppet6-master-bootstrap.sh" 1>&2
-   # exit 1
+    echo "Usage: sudo puppet6-master-bootstrap.sh" 1>&2
+    # exit 1
 fi
 
 # Do many checks!
 if [ ! -f /etc/puppetlabs/puppet/keys/private_key.pkcs7.pem ]; then
-        echo "The eyaml private key does not exist in /etc/puppetlabs/puppet/keys/"
-        exit 1
+    echo "The eyaml private key does not exist in /etc/puppetlabs/puppet/keys/"
+    exit 1
 fi
 
 if [ ! -f /etc/puppetlabs/puppet/keys/public_key.pkcs7.pem ]; then
-        echo "The eyaml public key does not exist in /etc/puppetlabs/puppet/keys/"
-        exit 1
+    echo "The eyaml public key does not exist in /etc/puppetlabs/puppet/keys/"
+    exit 1
 fi
 
 if [ ! -f /etc/puppetlabs/r10k/r10k.yaml ]; then
-        echo "The r10k config file does not exist at /etc/puppetlabs/r10k/r10k.yaml"
-        exit 1
+    echo "The r10k config file does not exist at /etc/puppetlabs/r10k/r10k.yaml"
+    exit 1
+fi
+
+if [ ! -d /root/.ssh ]; then
+    mkdir /root/.ssh || exit 1
+    chmod 700 /root/.ssh || exit 1
 fi
 
 ssh-keyscan github.com >> /root/.ssh/known_hosts || exit 1
