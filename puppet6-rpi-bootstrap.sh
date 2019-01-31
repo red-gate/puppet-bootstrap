@@ -68,6 +68,14 @@ puppet config set masterport $MASTERPORT --section main
 
 puppet config set environment $PUPPETENV --section agent || exit 1
 
+# If we're setting extra cert attributes, do that now
+if [ ! -z "$PP_ENVIRONMENT$PP_SERVICE$PP_ROLE" ]; then
+	echo "extension_requests:" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+	[ $PP_ENVIRONMENT ] && echo "    pp_environment: $PP_ENVIRONMENT" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+	[ $PP_SERVICE ] && echo "    pp_service: $PP_SERVICE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+	[ $PP_ROLE ] && echo "    pp_role: $PP_ROLE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
+fi
+
 puppet agent -t
 
 echo 'Sign this node on the server and press [enter] here when done...'
