@@ -7,19 +7,40 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Make sure we have a sensible hostname
-echo "Enter a hostname for this machine: "
-read NEWHOSTNAME
+if [ -z "$NEWHOSTNAME" ]; then
+    read -p "Enter a hostname for this machine: " NEWHOSTNAME
+fi
+echo "Using new hostname from NEWHOSTNAME: $NEWHOSTNAME"
 hostname $NEWHOSTNAME
 echo $NEWHOSTNAME > /etc/hostname
 
-echo "Enter the puppetmaster hostname"
-read MASTER
+if [ -z "$PUPPETMASTER" ]; then
+    read -p "Enter puppet server hostname: " PUPPETMASTER
+fi
+echo "Using puppet server: $PUPPETMASTER"
 
-echo "Enter puppet master port (8140 is the normal one): "
-read MASTERPORT
+if [ -z "$MASTERPORT" ]; then
+    read -p "Enter puppet server port (8140 is the normal one): " MASTERPORT
+fi
+echo "Using server port: $MASTERPORT"
 
-echo "Enter the environment name"
-read PUPPETENV
+if [ -z "$PUPPETENV" ]; then
+    read -p "Enter Puppet environment name (e.g. production): " PUPPETENV
+fi
+echo "Using Puppet environment: $PUPPETENV"
+
+if [ -z "$PP_ENVIRONMENT$PP_SERVICE$PP_ROLE" ]; then
+    read -p "Set extra certificate attributes? [y/N]:" SET_EXTRA_ATTRIBUTES
+    if [ $SET_EXTRA_ATTRIBUTES ] && [ ${SET_EXTRA_ATTRIBUTES,,} == "y" ]; then
+    	read -p "pp_environment: " PP_ENVIRONMENT
+    	read -p "pp_service: " PP_SERVICE
+    	read -p "pp_role: " PP_ROLE
+    fi
+fi
+echo "Extended certificate attributes:"
+echo "  pp_environment: $PP_ENVIRONMENT"
+echo "  pp_service: $PP_SERVICE"
+echo "  pp_role: $PP_ROLE"
 
 echo "Thanks. Beginning set up. This compiles from source so will likely take a long time..."
 # add puppet repo
@@ -31,9 +52,9 @@ apt-get install ruby-full facter hiera unzip -y || exit 1
 gem install bundler
 gem install semantic_puppet
 
-wget https://github.com/puppetlabs/puppet/archive/6.0.4.tar.gz || exit 1
-tar xzf 6.0.4.tar.gz || exit 1
-cd puppet-6.0.4
+wget https://github.com/puppetlabs/puppet/archive/6.2.0.tar.gz || exit 1
+tar xzf 6.2.0.tar.gz || exit 1
+cd puppet-6.2.0
 
 bundle install --path .bundle/gems || exit 1
 bundle update || exit 1
@@ -49,7 +70,7 @@ puppet config set environment $PUPPETENV --section agent || exit 1
 
 puppet agent -t
 
-echo 'Sign this node on the master and press [enter] here when done...'
+echo 'Sign this node on the server and press [enter] here when done...'
 read dummy
 
 # Enable puppet
