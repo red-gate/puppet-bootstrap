@@ -1,4 +1,23 @@
-# Check we already have a csr_attributes.yaml present - if not, prompt to create
+param(
+    # A list of certificate extensions as defined in https://puppet.com/docs/puppet/5.5/ssl_attributes_extensions.html
+    # example: @{ pp_environment='staging'; pp_role='kubernetes-master' }
+    [HashTable] $CertificateExtensions = @{}
+)
+
+
+if($CertificateExtensions) {
+    # Create the csr_attributes.yaml with values from $CertificateExtensions
+    # Do it before installing puppet, in case the installer start the puppet service
+    # ($PuppetAgentStartupMode = Automatic)
+
+    New-Item $env:ProgramData\PuppetLabs\puppet\etc -ItemType Directory -Force | Out-Null
+
+    @(
+        'extension_requests:',
+        ($CertificateExtensions.GetEnumerator() | % { "  $($_.Name): $($_.Value)" })
+    ) | Set-Content -Path $env:ProgramData\PuppetLabs\puppet\etc\csr_attributes.yaml
+}
+
 if (!(Test-Path -Path "C:\ProgramData\PuppetLabs\puppet\etc\csr_attributes.yaml")) {
     Write-Error "No csr_attributes.yaml found - aborting"
     exit 1
