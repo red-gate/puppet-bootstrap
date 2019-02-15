@@ -91,11 +91,20 @@ fi
 /opt/puppetlabs/bin/puppet agent -t
 
 if [ -z "$NO_WAIT_FOR_SIGN" ]; then
-    echo "Sign and classify the node on the puppet master, then press enter"
-    read dummy
+    if [ -z "$LOOP_UNTIL_SIGNED" ]; then
+        echo "Sign and classify the node on the puppet master, then press enter"
+        read dummy
 
-    # First real puppet run
-    /opt/puppetlabs/bin/puppet agent -t || exit 1
+        # First real puppet run
+        /opt/puppetlabs/bin/puppet agent -t || exit 1
+    else
+        # We're going to go around the loop until we get a valid cert...
+        while [ ! -f "/etc/puppetlabs/puppet/ssl/certs/${NEWHOSTNAME}.pem"]; do
+            echo "Sleeping while we wait for our certificate..."
+            sleep 30
+            /opt/puppetlabs/bin/puppet agent -t
+        done
+    fi
 fi
 
 # Enable puppet
