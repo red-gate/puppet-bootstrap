@@ -99,7 +99,7 @@ if [ -z "$NO_WAIT_FOR_SIGN" ]; then
         /opt/puppetlabs/bin/puppet agent -t || exit 1
     else
         # We're going to go around the loop until we get a valid cert...
-        while [ ! -f "/etc/puppetlabs/puppet/ssl/certs/${NEWHOSTNAME}.pem"]; do
+        while [ ! -f "/etc/puppetlabs/puppet/ssl/certs/${NEWHOSTNAME}.pem" ]; do
             echo "Sleeping while we wait for our certificate..."
             sleep 30
             /opt/puppetlabs/bin/puppet agent -t
