@@ -44,6 +44,7 @@ if (! ($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Admin
 }
 
 $installFile = 'C:\Windows\Temp\puppet-agent.msi'
+if(Test-Path $installFile) { Remove-Item $installFile } # Make sure we do not use a previously downloaded file.
 while(!(Test-Path $installFile)) {
     Write-Host "Downloading puppet-agent from $MsiUrl to $installFile"
     (new-object net.webclient).DownloadFile($MsiUrl, $installFile)
