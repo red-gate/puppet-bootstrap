@@ -76,6 +76,13 @@ if [ ! -z "$PP_ENVIRONMENT$PP_SERVICE$PP_ROLE" ]; then
 	[ $PP_ROLE ] && echo "    pp_role: $PP_ROLE" >> /etc/puppetlabs/puppet/csr_attributes.yaml
 fi
 
+# These modules are normally baked into the agent install, but since we aren't using the
+# official packages on ARM, install them manually...
+puppet module install puppetlabs-sshkeys_core
+puppet module install puppetlabs-cron_core
+puppet module install puppetlabs-host_core
+
+
 puppet agent -t
 
 echo 'Sign this node on the server and press [enter] here when done...'
