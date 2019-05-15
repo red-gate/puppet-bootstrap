@@ -48,7 +48,7 @@ mkdir setup-temp
 cd setup-temp
 
 apt-get update || exit 1
-apt-get install ruby-full facter hiera unzip -y || exit 1
+apt-get install ruby-full facter hiera unzip build-essential -y || exit 1
 gem install bundler
 gem install semantic_puppet
 
