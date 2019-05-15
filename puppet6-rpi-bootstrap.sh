@@ -62,7 +62,7 @@ ruby install.rb || exit 1
 
 # Note: we used to add /opt/puppetlabs/bin to the path here, but it would seem Puppet 5.5 at least puts it in /usr/bin/puppet anyway, so no need...
 
-puppet config set server $MASTER --section main || exit 1
+puppet config set server $PUPPETMASTER --section main || exit 1
 
 puppet config set masterport $MASTERPORT --section main
 
