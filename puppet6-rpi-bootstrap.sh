@@ -78,10 +78,20 @@ fi
 
 # These modules are normally baked into the agent install, but since we aren't using the
 # official packages on ARM, install them manually...
-puppet module install puppetlabs-sshkeys_core
-puppet module install puppetlabs-cron_core
-puppet module install puppetlabs-host_core
-
+# https://github.com/puppetlabs/puppet-specifications/blob/master/moving_modules.md
+puppet module install puppetlabs-augeas_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-cron_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-host_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-k5login_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-mailalias_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-maillist_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-mount_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-nagios_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-selinux_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-sshkeys_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-yumrepo_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-zfs_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
+puppet module install puppetlabs-zone_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
 
 puppet agent -t
 
