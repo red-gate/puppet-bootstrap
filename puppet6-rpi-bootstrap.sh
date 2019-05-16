@@ -60,7 +60,24 @@ bundle install --path .bundle/gems || exit 1
 bundle update || exit 1
 ruby install.rb || exit 1
 
-# Note: we used to add /opt/puppetlabs/bin to the path here, but it would seem Puppet 5.5 at least puts it in /usr/bin/puppet anyway, so no need...
+# Create the systemd service
+cat <<EOF > /lib/systemd/system/puppet.service
+[Unit]
+Description=Puppet agent
+Wants=basic.target
+After=basic.target network.target
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/puppetagent
+EnvironmentFile=-/etc/sysconfig/puppet
+EnvironmentFile=-/etc/default/puppet
+ExecStart=/usr/bin/puppet agent $PUPPET_EXTRA_OPTS --no-daemonize
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+EOF
 
 puppet config set server $PUPPETMASTER --section main || exit 1
 
