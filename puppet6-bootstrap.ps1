@@ -15,6 +15,8 @@ param(
     [string] $PuppetAgentAccountUser,
     [string] $PuppetAgentAccountPassword,
     [string] $PuppetAgentAccountDomain,
+    # Set a custom certname. You probably only want to use this if you're not happy with what "facter fqdn" resolves to.
+    [string] $PuppetAgentCertName,
     [string] $PuppetServer,
     [Int] $PuppetServerPort,
     [string] $PuppetEnvironment,
@@ -42,6 +44,7 @@ if (! ($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Admin
 }
 
 $installFile = 'C:\Windows\Temp\puppet-agent.msi'
+if(Test-Path $installFile) { Remove-Item $installFile } # Make sure we do not use a previously downloaded file.
 while(!(Test-Path $installFile)) {
     Write-Host "Downloading puppet-agent from $MsiUrl to $installFile"
     (new-object net.webclient).DownloadFile($MsiUrl, $installFile)
@@ -70,6 +73,7 @@ $install_args = @(
 if($PuppetAgentAccountDomain) { $install_args += "PUPPET_AGENT_ACCOUNT_DOMAIN=$PuppetAgentAccountDomain" }
 if($PuppetAgentAccountUser) { $install_args += "PUPPET_AGENT_ACCOUNT_USER=$PuppetAgentAccountUser" }
 if($PuppetAgentAccountPassword) { $install_args += "PUPPET_AGENT_ACCOUNT_PASSWORD=$PuppetAgentAccountPassword" }
+if($PuppetAgentCertName) { $install_args += "PUPPET_AGENT_CERTNAME=$PuppetAgentCertName" }
 if($PuppetServer) { $install_args += "PUPPET_MASTER_SERVER=$PuppetServer" }
 if($PuppetEnvironment) { $install_args += "PUPPET_AGENT_ENVIRONMENT=$PuppetEnvironment" }
 
