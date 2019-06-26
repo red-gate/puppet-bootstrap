@@ -69,6 +69,9 @@ while :; do
         die 'ERROR: "-r|--pprole" requires a value'
       fi
       ;;
+    -n|--nowait)
+      NO_WAIT_FOR_SIGN="true"
+      ;;      
     *)
       break
   esac
