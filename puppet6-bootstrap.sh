@@ -6,6 +6,80 @@ if [ "$(id -u)" != "0" ]; then
    # exit 1
 fi
 
+die() {
+  printf '%s\n' "$1" >&2
+  exit 1
+}
+
+while :; do
+  case $1 in
+    -h|--hostname)
+      if [ "$2" ]; then
+        NEWHOSTNAME=$2
+        shift
+      else
+        die 'ERROR: "-h|--hostname" requires a value'
+      fi
+      ;;
+    -S|--puppetmaster)
+      if [ "$2" ]; then
+        PUPPETMASTER=$2
+        shift
+      else
+        die 'ERROR: "-S|--puppetmaster" requires a value'
+      fi
+      ;;
+    -p|--puppetport)
+      if [ "$2" ]; then
+        MASTERPORT=$2
+        shift
+      else
+        die 'ERROR: "-p|--puppetport" requires a value'
+      fi
+      ;;
+    -E|--puppetenv)
+      if [ "$2" ]; then
+        PUPPETENV=$2
+        shift
+      else
+        die 'ERROR: "-E|--puppetenv" requires a value'
+      fi
+      ;;
+    -e|--ppenv)
+      if [ "$2" ]; then
+        PP_ENVIRONMENT=$2
+        shift
+      else
+        die 'ERROR: "-e|--ppenv" requires a value'
+      fi
+      ;;
+    -s|--ppservice)
+      if [ "$2" ]; then
+        PP_SERVICE=$2
+        shift
+      else
+        die 'ERROR: "-s|--ppservice" requires a value'
+      fi
+      ;;
+    -r|--pprole)
+      if [ "$2" ]; then
+        PP_ROLE=$2
+        shift
+      else
+        die 'ERROR: "-r|--pprole" requires a value'
+      fi
+      ;;
+    -n|--nowait)
+      NO_WAIT_FOR_SIGN="true"
+      ;;      
+    *)
+      break
+  esac
+  shift
+done
+
+
+
 # Make sure we have a sensible hostname
 if [ -z "$NEWHOSTNAME" ]; then
     read -p "Enter a hostname for this machine: " NEWHOSTNAME
