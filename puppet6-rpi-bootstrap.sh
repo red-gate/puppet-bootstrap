@@ -122,4 +122,4 @@ puppet agent --enable
 puppet agent -t
 
 # Enable the service
-puppet resource service puppet ensure=running enable=true
+systemctl enable puppet.service
