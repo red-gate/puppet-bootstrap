@@ -64,7 +64,7 @@ After=basic.target network.target
 EnvironmentFile=-/etc/sysconfig/puppetagent
 EnvironmentFile=-/etc/sysconfig/puppet
 EnvironmentFile=-/etc/default/puppet
-ExecStart=/usr/bin/puppet agent $PUPPET_EXTRA_OPTS --no-daemonize
+ExecStart=/usr/local/bin/puppet agent $PUPPET_EXTRA_OPTS --no-daemonize
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 
