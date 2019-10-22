@@ -103,16 +103,8 @@ puppet module install puppetlabs-yumrepo_core --target-dir /opt/puppetlabs/puppe
 puppet module install puppetlabs-zfs_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
 puppet module install puppetlabs-zone_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
 
-puppet agent -t
-
-echo 'Sign this node on the server and press [enter] here when done...'
-read dummy
-
-# Enable puppet
-puppet agent --enable
-
-# Run it for reals
-puppet agent -t
+# First puppet run. Will attempt to get signed certificate from master every 30s.
+puppet agent -t --waitforcert 30
 
 # Enable the service
 systemctl enable puppet.service
