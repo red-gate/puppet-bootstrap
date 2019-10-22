@@ -42,10 +42,7 @@ echo "  pp_environment: $PP_ENVIRONMENT"
 echo "  pp_service: $PP_SERVICE"
 echo "  pp_role: $PP_ROLE"
 
-echo "Thanks. Beginning set up. This compiles from source so will likely take a long time..."
-# add puppet repo
-mkdir setup-temp
-cd setup-temp
+echo "Thanks. Beginning set up. This may take some time..."
 
 apt-get update || exit 1
 apt-get install ruby-full -y || exit 1
