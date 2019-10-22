@@ -42,23 +42,16 @@ echo "  pp_environment: $PP_ENVIRONMENT"
 echo "  pp_service: $PP_SERVICE"
 echo "  pp_role: $PP_ROLE"
 
-echo "Thanks. Beginning set up. This compiles from source so will likely take a long time..."
-# add puppet repo
-mkdir setup-temp
-cd setup-temp
+echo "Thanks. Beginning set up. This may take some time..."
 
 apt-get update || exit 1
-apt-get install ruby-full facter hiera unzip build-essential -y || exit 1
-gem install bundler
-gem install semantic_puppet
+apt-get install ruby-full -y || exit 1
 
-wget https://github.com/puppetlabs/puppet/archive/6.4.0.tar.gz || exit 1
-tar xzf 6.4.0.tar.gz || exit 1
-cd puppet-6.4.0
+gem install puppet --version '~> 6' --no-rdoc --no-ri
 
-bundle install --path .bundle/gems || exit 1
-bundle update || exit 1
-ruby install.rb || exit 1
+# We do need to create the puppet.conf file ourselves
+mkdir -p /etc/puppetlabs/puppet/
+touch /etc/puppetlabs/puppet/puppet.conf
 
 # Create the systemd service
 cat <<EOF > /lib/systemd/system/puppet.service
@@ -110,16 +103,8 @@ puppet module install puppetlabs-yumrepo_core --target-dir /opt/puppetlabs/puppe
 puppet module install puppetlabs-zfs_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
 puppet module install puppetlabs-zone_core --target-dir /opt/puppetlabs/puppet/vendor_modules/
 
-puppet agent -t
-
-echo 'Sign this node on the server and press [enter] here when done...'
-read dummy
-
-# Enable puppet
-puppet agent --enable
-
-# Run it for reals
-puppet agent -t
+# First puppet run. Will attempt to get signed certificate from master every 30s.
+puppet agent -t --waitforcert 30
 
 # Enable the service
 systemctl enable puppet.service
