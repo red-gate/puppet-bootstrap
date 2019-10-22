@@ -52,6 +52,9 @@ apt-get install ruby-full -y || exit 1
 
 gem install puppet --version '~> 6' --no-rdoc --no-ri
 
+# We do need to create the puppet.conf file ourselves
+mkdir -p /etc/puppetlabs/puppet/
+touch /etc/puppetlabs/puppet/puppet.conf
 
 # Create the systemd service
 cat <<EOF > /lib/systemd/system/puppet.service
