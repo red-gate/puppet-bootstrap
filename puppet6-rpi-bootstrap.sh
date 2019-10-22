@@ -48,17 +48,10 @@ mkdir setup-temp
 cd setup-temp
 
 apt-get update || exit 1
-apt-get install ruby-full facter hiera unzip build-essential -y || exit 1
-gem install bundler
-gem install semantic_puppet
+apt-get install ruby-full -y || exit 1
 
-wget https://github.com/puppetlabs/puppet/archive/6.4.0.tar.gz || exit 1
-tar xzf 6.4.0.tar.gz || exit 1
-cd puppet-6.4.0
+gem install puppet --version '~> 6'
 
-bundle install --path .bundle/gems || exit 1
-bundle update || exit 1
-ruby install.rb || exit 1
 
 # Create the systemd service
 cat <<EOF > /lib/systemd/system/puppet.service
