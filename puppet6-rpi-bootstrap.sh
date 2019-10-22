@@ -50,7 +50,7 @@ cd setup-temp
 apt-get update || exit 1
 apt-get install ruby-full -y || exit 1
 
-gem install puppet --version '~> 6'
+gem install puppet --version '~> 6' --no-rdoc --no-ri
 
 
 # Create the systemd service
