@@ -149,12 +149,14 @@ export PATH=$PATH:/opt/puppetlabs/bin
 
 /opt/puppetlabs/bin/puppet config set server $PUPPETMASTER --section main
 
-
 /opt/puppetlabs/bin/puppet config set masterport $MASTERPORT --section main
 
 # Set the environment
 
 /opt/puppetlabs/bin/puppet config --section agent set environment $PUPPETENV
+
+# Set the certname so we don't re-generate the certificate request if our DNS suffix changes
+/opt/puppetlabs/bin/puppet config set certname $NEWHOSTNAME --section main
 
 # If we're setting extra cert attributes, do that now
 if [ ! -z "$PP_ENVIRONMENT$PP_SERVICE$PP_ROLE" ]; then
