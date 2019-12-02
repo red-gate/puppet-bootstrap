@@ -76,6 +76,8 @@ puppet config set server $PUPPETMASTER --section main || exit 1
 
 puppet config set masterport $MASTERPORT --section main
 
+puppet config set certname $NEWHOSTNAME --section main
+
 puppet config set environment $PUPPETENV --section agent || exit 1
 
 # If we're setting extra cert attributes, do that now
