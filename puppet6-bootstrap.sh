@@ -132,7 +132,11 @@ if [ "$dist" == "\"CentOS Linux\"" ]; then
     yum update || exit 1
     yum install puppet-agent -y || exit 1
 elif [ "$dist" == "\"Ubuntu\"" ]; then
-	RELEASE_NAME=`lsb_release -c -s`
+	  RELEASE_NAME=`lsb_release -c -s`
+    # Bit of a hack. The focal repos don't have puppet-agent in them yet -- 2020-04-28
+    if [$RELEASE_NAME == "focal"]; then
+      RELEASE_NAME='bionic'
+    fi
     wget https://apt.puppetlabs.com/puppet6-release-${RELEASE_NAME}.deb || exit 1
     dpkg -i puppet6-release-${RELEASE_NAME}.deb || exit 1
     apt-get update || exit 1
