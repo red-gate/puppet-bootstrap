@@ -134,7 +134,7 @@ if [ "$dist" == "\"CentOS Linux\"" ]; then
 elif [ "$dist" == "\"Ubuntu\"" ]; then
 	  RELEASE_NAME=`lsb_release -c -s`
     # Bit of a hack. The focal repos don't have puppet-agent in them yet -- 2020-04-28
-    if [$RELEASE_NAME == "focal"]; then
+    if [[ "$RELEASE_NAME" == "focal" ]]; then
       RELEASE_NAME='bionic'
     fi
     wget https://apt.puppetlabs.com/puppet6-release-${RELEASE_NAME}.deb || exit 1
