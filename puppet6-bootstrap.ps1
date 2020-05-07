@@ -32,9 +32,9 @@ if(Get-Command puppet -ErrorAction 0) {
 }
 
 if( [Environment]::Is64BitOperatingSystem ) {
-    $MsiUrl = 'https://downloads.puppetlabs.com/windows/puppet6/puppet-agent-6.13.0-x64.msi'
+    $MsiUrl = 'https://downloads.puppetlabs.com/windows/puppet6/puppet-agent-x64-latest.msi'
 } else {
-    $MsiUrl = 'https://downloads.puppetlabs.com/windows/puppet6/puppet-agent-6.13.0-x86.msi'
+    $MsiUrl = 'https://downloads.puppetlabs.com/windows/puppet6/puppet-agent-x86-latest.msi'
 }
 
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
