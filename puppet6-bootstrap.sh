@@ -137,7 +137,7 @@ elif [ "$dist" == "\"Ubuntu\"" ]; then
     dpkg -i puppet6-release-${RELEASE_NAME}.deb || exit 1
     apt-get update || exit 1
     if [ "$RELEASE_NAME" == "focal" ]; then
-      apt install puppet-agent==6.15.0-focal1
+      apt install puppet-agent=6.15.0-1focal
     else
       apt-get install puppet-agent || exit 1
     fi
