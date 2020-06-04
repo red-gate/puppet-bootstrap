@@ -136,7 +136,11 @@ elif [ "$dist" == "\"Ubuntu\"" ]; then
     wget https://apt.puppetlabs.com/puppet6-release-${RELEASE_NAME}.deb || exit 1
     dpkg -i puppet6-release-${RELEASE_NAME}.deb || exit 1
     apt-get update || exit 1
-    apt-get install puppet-agent || exit 1
+    if [ "$RELEASE_NAME" == "focal" ]; then
+      apt install puppet-agent==6.15.0-focal1
+    else
+      apt-get install puppet-agent || exit 1
+    fi
 else
     echo "Not Ubuntu or CentOS. Aborting."
     exit 1
