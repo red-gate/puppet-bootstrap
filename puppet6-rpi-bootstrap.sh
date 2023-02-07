@@ -47,7 +47,7 @@ echo "Thanks. Beginning set up. This may take some time..."
 apt-get update || exit 1
 apt-get install ruby-full -y || exit 1
 
-gem install puppet --version '~> 6' --no-rdoc --no-ri
+gem install puppet --version '~> 6' --no-document
 
 # We do need to create the puppet.conf file ourselves
 mkdir -p /etc/puppetlabs/puppet/
